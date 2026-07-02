@@ -47,32 +47,46 @@
   #search:focus { outline: none; background: var(--secondary); }
   .empty { color: var(--muted); font-style: italic; text-align: center; padding: 50px 0; border: 2px dashed var(--border-light); }
 
-  .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  .hero { padding: 8px 0 28px; }
+  .hero h1 { font-size: 2.1rem; margin: 4px 0 8px; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
   @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
   .card {
     border: 2px solid var(--border); background: #fff;
     display: flex; flex-direction: column; overflow: hidden;
     transition: transform .15s ease, box-shadow .15s ease;
   }
-  .card:hover { transform: translateY(-2px); box-shadow: 4px 4px 0 0 rgba(0,0,0,1); }
-  .card-head { border-bottom: 2px solid var(--border); padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+  .card:hover { transform: translateY(-3px); box-shadow: 5px 5px 0 0 rgba(0,0,0,1); }
+  .cover {
+    height: 96px; display: flex; align-items: center; justify-content: center;
+    font-size: 2.6rem; border-bottom: 2px solid var(--border);
+  }
+  .card-head { padding: 12px 18px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .badge {
-    display: inline-block; font-size: 0.65rem; padding: 3px 9px; font-weight: 700;
+    display: inline-block; font-size: 0.66rem; padding: 4px 10px; font-weight: 700;
     border: 1.5px solid var(--border); background: #fff; color: var(--ink); text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.03em; border-radius: 999px;
   }
   .badge.risk { color: white; border-color: transparent; }
-  .card-body { padding: 16px; flex: 1; }
-  .card-body h2 { margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; }
-  .desc { color: #333; line-height: 1.55; font-size: 0.88rem; }
-  .card-foot { border-top: 2px solid var(--border); background: var(--secondary); padding: 12px 16px; }
-  .install-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; font-weight: 700; }
-  .install {
-    background: #fff; border: 1.5px solid var(--border); padding: 10px 12px;
-    font-family: ui-monospace, "SF Mono", monospace; font-size: 0.76rem; overflow-x: auto;
-    white-space: pre; line-height: 1.5;
+  .card-body { padding: 12px 18px 18px; flex: 1; }
+  .card-body h2 { margin: 6px 0 8px 0; font-size: 1.22rem; font-weight: 800; letter-spacing: -0.01em; }
+  .desc { color: #333; line-height: 1.6; font-size: 0.9rem; }
+  .card-foot { border-top: 2px solid var(--border); background: var(--secondary); padding: 14px 18px; }
+  .install-row { display: flex; align-items: center; gap: 10px; }
+  .install-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--green); color: #fff; border: 2px solid var(--border);
+    font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em;
+    padding: 10px 14px; cursor: pointer; transition: background .12s ease;
   }
-  .roadmap { font-size: 0.7rem; color: var(--muted); margin-top: 8px; }
+  .install-btn:hover { background: var(--green-hover); }
+  .install-btn.copied { background: var(--ink); }
+  .install-cmd {
+    display: none; margin-top: 10px; background: #fff; border: 1.5px solid var(--border); padding: 10px 12px;
+    font-family: ui-monospace, "SF Mono", monospace; font-size: 0.74rem; overflow-x: auto; white-space: pre; line-height: 1.5;
+  }
+  .install-cmd.shown { display: block; }
+  .roadmap { font-size: 0.7rem; color: var(--muted); margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -80,15 +94,18 @@
   <div class="logo"><span class="dot"></span>SKILL-HUB</div>
 </div>
 
-<h1>SKILL 目录</h1>
-<p class="meta">面向 <strong>OpenCode</strong> 的内网 skill 目录（未来会扩展到 <strong>OpenClaw</strong> 生态）— 只展示 <code>approved</code> 状态的 skill；安装口令随点随拿，不需要登录。发布/上传走 <code>review_pipeline.py</code>，不走网页，这里是浏览 + 下载专用页。</p>
-<div class="stats">
-  <div class="stat"><div class="n">2</div><div class="label">Skills Approved</div></div>
-  <div class="stat"><div class="n">2</div><div class="label">Low Risk</div></div>
+<div class="hero">
+  <h1>发现内网 Skill</h1>
+  <p class="meta">面向 <strong>OpenCode</strong> 的内网 skill 目录（未来会扩展到 <strong>OpenClaw</strong> 生态）— 只展示 <code>approved</code> 状态的 skill；安装口令随点随拿，不需要登录。发布/上传走 <code>review_pipeline.py</code>，不走网页，这里是浏览 + 下载专用页。</p>
+  <div class="stats">
+    <div class="stat"><div class="n">2</div><div class="label">Skills Approved</div></div>
+    <div class="stat"><div class="n">2</div><div class="label">Low Risk</div></div>
+  </div>
+  <input id="search" type="text" placeholder="搜索 skill 名称或描述…" oninput="filterCards(this.value)">
 </div>
-<input id="search" type="text" placeholder="搜索 skill 名称或描述…" oninput="filterCards(this.value)">
 <div class="grid" id="grid">
 <div class="card" data-search="algorithmic-art creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. create original algorithmic art rather than copying existing artists&#x27; work to avoid copyright violations.">
+  <div class="cover" style="background:linear-gradient(135deg,#a7f3d0,#93c5fd)">🛠️</div>
   <div class="card-head">
     <span class="badge risk" style="background:var(--green)">风险: low</span>
     <span class="badge">外部采集</span>
@@ -98,13 +115,16 @@
     <p class="desc">Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists&#x27; work to avoid copyright violations.</p>
   </div>
   <div class="card-foot">
-    <div class="install-label">安装（OpenCode）</div>
-    <div class="install">bash scripts/install.sh algorithmic-art ~/.config/opencode/skills</div>
-    <div class="roadmap">OpenClaw / ClawHub 兼容支持：待该生态成熟后跟进（见 architecture/02-reference-architectures.md）</div>
+    <div class="install-row">
+      <button class="install-btn" onclick="toggleInstall(this, 'algorithmic-art')">安装（OpenCode）</button>
+    </div>
+    <div class="install-cmd" id="cmd-algorithmic-art"></div>
+    <div class="roadmap">OpenClaw / ClawHub 兼容支持：待该生态成熟后跟进</div>
   </div>
 </div>
 
 <div class="card" data-search="commit-message-helper write conventional-commit style git commit messages. use when the user asks for help writing or improving a commit message.">
+  <div class="cover" style="background:linear-gradient(135deg,#a7f3d0,#93c5fd)">⚡</div>
   <div class="card-head">
     <span class="badge risk" style="background:var(--green)">风险: low</span>
     <span class="badge">自己编写</span>
@@ -114,9 +134,11 @@
     <p class="desc">Write conventional-commit style git commit messages. Use when the user asks for help writing or improving a commit message.</p>
   </div>
   <div class="card-foot">
-    <div class="install-label">安装（OpenCode）</div>
-    <div class="install">bash scripts/install.sh commit-message-helper ~/.config/opencode/skills</div>
-    <div class="roadmap">OpenClaw / ClawHub 兼容支持：待该生态成熟后跟进（见 architecture/02-reference-architectures.md）</div>
+    <div class="install-row">
+      <button class="install-btn" onclick="toggleInstall(this, 'commit-message-helper')">安装（OpenCode）</button>
+    </div>
+    <div class="install-cmd" id="cmd-commit-message-helper"></div>
+    <div class="roadmap">OpenClaw / ClawHub 兼容支持：待该生态成熟后跟进</div>
   </div>
 </div>
 
@@ -127,6 +149,16 @@ function filterCards(q) {
   document.querySelectorAll('.card').forEach(c => {
     c.style.display = c.dataset.search.includes(q) ? '' : 'none';
   });
+}
+function toggleInstall(btn, name) {
+  const cmdBox = document.getElementById('cmd-' + name);
+  const cmd = 'bash scripts/install.sh ' + name + ' ~/.config/opencode/skills';
+  cmdBox.textContent = cmd;
+  cmdBox.classList.add('shown');
+  navigator.clipboard?.writeText(cmd).catch(() => {});
+  btn.textContent = '已复制到剪贴板 ✓';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = '安装（OpenCode）'; btn.classList.remove('copied'); }, 1800);
 }
 </script>
 </body>
