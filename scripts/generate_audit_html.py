@@ -34,9 +34,10 @@ PAGE_HEAD = """<!DOCTYPE html>
 {css}
   .run {{
     border: 2px solid var(--border); background: #fff; margin-bottom: 16px;
-    box-shadow: 4px 4px 0 var(--border);
+    transition: transform .15s ease, box-shadow .15s ease;
   }}
-  .run-head {{ display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 2px solid var(--border); background: var(--bg); flex-wrap: wrap; }}
+  .run:hover {{ transform: translateY(-2px); box-shadow: 4px 4px 0 0 rgba(0,0,0,1); }}
+  .run-head {{ display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 2px solid var(--border); flex-wrap: wrap; }}
   .run-head .name {{ font-weight: 800; font-size: 1.02rem; }}
   .pill {{ font-size: 0.68rem; padding: 3px 10px; font-weight: 700; border: 2px solid var(--border); background: #fff; text-transform: uppercase; }}
   .pill.outcome {{ color: white; border-color: transparent; }}
