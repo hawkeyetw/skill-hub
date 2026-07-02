@@ -2,8 +2,16 @@
 
 Everything here runs on this machine. No GitHub account needed — the real product
 shouldn't live on public GitHub anyway (see `.trellis/spec/architecture/03-deployment-and-auth.md`,
-this is meant to be intranet-only). `registry/` stands in for the internal git repo;
-in production it *is* a git repo (each `--approve` would be a commit).
+this is meant to be intranet-only).
+
+Two ways to run this:
+- **Part 1** below: call `review_pipeline.py` directly, one skill at a time - good
+  for understanding each step in isolation.
+- **Part 2** (`## git push triggers CI`): the real end-to-end flow - `git push` to
+  a local bare repo standing in for the internal git server, which runs the exact
+  same pipeline automatically via a `post-receive` hook, the same way a self-hosted
+  Gitea/gitolite setup would (no GitHub Actions/GitLab CI needed - see
+  `.trellis/spec/architecture/03-deployment-and-auth.md` for why that matters here).
 
 This proves the core pipeline from `.trellis/spec/security/05-solo-operator-playbook.md`
 actually works, end to end, against real content — not just on paper.
@@ -60,6 +68,37 @@ bash scripts/install.sh pdf-utils-pro demo-client/.agents/skills   # -> error, n
 bash scripts/reset_demo.sh
 ```
 
+## Part 2: git push triggers CI
+
+```bash
+cd /root/skill-hub
+bash scripts/reset_demo.sh          # fixtures back in registry/pending/
+bash scripts/setup_git_ci_demo.sh   # tears down/recreates the bare repo + hook,
+                                     # inits your local repo, commits, pushes -
+                                     # watch the review pipeline run inline in the
+                                     # push output, then pulls the CI's commit back
+git log --oneline --graph --all     # your commit, then a separate "skill-hub CI" commit
+```
+
+What actually happens on `git push`: the bare repo at `/root/skill-hub-git-server/skill-hub.git`
+runs `scripts/post-receive-hook.sh` (installed as its `hooks/post-receive`), which
+clones itself into a scratch dir, runs `review_pipeline.py --approve` against
+everything in `registry/pending/`, regenerates the index/catalog/audit pages, and
+pushes the result back as a commit authored by `skill-hub CI <skill-hub-ci@internal>`
+(`git log` shows your commits and the CI's commits as distinguishable authors). That
+push re-triggers the hook once more; it finds nothing left pending and exits - a
+harmless, self-terminating recursion, not an infinite loop.
+
+**Bugs this surfaced while building it** (left in the hook's comments as a record,
+not because they're clever - because whoever touches this next will hit the same
+ones): git hooks inherit `GIT_DIR` pointing at the bare repo, which silently hijacks
+any `git` command run later in the hook unless explicitly unset; checking out a
+commit into a bare repo's working tree via `--work-tree checkout -f rev -- .`
+produces a commit with no parent (breaks every future `git pull`) - clone properly
+instead; git doesn't track empty directories, so once CI empties `registry/pending/`,
+the next checkout removes the directory entirely and any script that assumes it
+exists needs a `mkdir -p` guard (`reset_demo.sh` has this now).
+
 ## Secret scanning uses the real market-standard tool, not hand-rolled regex
 
 `static_scan.py` shells out to **TruffleHog** (trufflesecurity/trufflehog) if it's on
@@ -84,16 +123,19 @@ injection+secret+dangerous-shell fixture; the sandbox catches a fixture specific
 built to dodge static patterns (real credential exfiltration attempt, observed live
 inside an isolated, network-restricted Docker container); approval state gates what
 `install.sh` will hand to a client; there's a real (if minimal) end-user-facing view
-of "what can I install and how" via the generated catalog page; the whole thing runs
-with zero external dependencies beyond Docker + a couple of downloaded binaries.
+of "what can I install and how" via the generated catalog page, plus a full pipeline
+audit trail via the audit page; **`git push` to a self-hosted-style bare repo really
+does trigger the whole review pipeline automatically and commits the result**, the
+way Phase 1 of the architecture doc describes - not just "would in production"; the
+whole thing runs with zero external dependencies beyond Docker + a couple of
+downloaded binaries + git itself.
 
 **Doesn't prove** (deliberately out of scope for a "does the concept work" demo,
 these are Phase 2/3 per `.trellis/spec/architecture/03-deployment-and-auth.md`):
 production-grade network-egress allowlisting (the sandbox uses `--network none` +
 loopback, not the manifest-driven domain allowlist from
 `.trellis/spec/security/03-manifest-and-runtime-enforcement.md`), SSO/LDAP
-integration (the catalog page has no auth - fine for a demo, not for production),
-IT/non-technical-audience catalog views, signing/provenance, gVisor/Firecracker-tier
-isolation for `risk_tier: high` skills, ClamAV malware scanning (see above), or real
-git-based version history (this demo mutates `registry/` in place; production commits
-it).
+integration (the catalog page has no auth, and the bare repo has no push-access
+control - fine for a demo, not for production), IT/non-technical-audience catalog
+views, signing/provenance, gVisor/Firecracker-tier isolation for `risk_tier: high`
+skills, or ClamAV malware scanning (see above).
