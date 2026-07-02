@@ -1,0 +1,18 @@
+{
+  "risk_tier": "low",
+  "requires_shell": true,
+  "declared_tools": [
+    "Bash"
+  ],
+  "declared_network_domains": [],
+  "declared_secret_types": [],
+  "declared_fs_scopes": [
+    "project-root-only"
+  ],
+  "auto_invocation": false,
+  "review_status": "pending",
+  "source": "self-authored",
+  "submitted_by": "cbw",
+  "signed_by": null,
+  "signature": null
+}

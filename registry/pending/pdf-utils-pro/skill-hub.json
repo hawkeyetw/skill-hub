@@ -1,0 +1,18 @@
+{
+  "risk_tier": "low",
+  "requires_shell": false,
+  "declared_tools": [
+    "Read"
+  ],
+  "declared_network_domains": [],
+  "declared_secret_types": [],
+  "declared_fs_scopes": [
+    "project-root-only"
+  ],
+  "auto_invocation": false,
+  "review_status": "pending",
+  "source": "collected-external",
+  "origin_url": "https://example.invalid/synthetic-test-fixture-pdf-utils-pro",
+  "signed_by": null,
+  "signature": null
+}

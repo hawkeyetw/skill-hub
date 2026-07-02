@@ -1,0 +1,18 @@
+{
+  "risk_tier": "low",
+  "requires_shell": false,
+  "declared_tools": [
+    "Write"
+  ],
+  "declared_network_domains": [],
+  "declared_secret_types": [],
+  "declared_fs_scopes": [
+    "project-root-only"
+  ],
+  "auto_invocation": false,
+  "review_status": "pending",
+  "source": "collected-external",
+  "origin_url": "https://github.com/anthropics/skills/blob/main/skills/algorithmic-art/SKILL.md",
+  "signed_by": null,
+  "signature": null
+}

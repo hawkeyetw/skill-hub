@@ -1,0 +1,6 @@
+# Local end-user install simulation - not repo content, analogous to not
+# committing someone's ~/.config/opencode/skills/
+demo-client/
+
+__pycache__/
+*.pyc
