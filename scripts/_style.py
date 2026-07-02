@@ -40,15 +40,11 @@ CSS = """
   .topbar {
     position: sticky; top: 0; z-index: 10; background: var(--bg);
     border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center;
     height: 52px; margin: 0 -20px 28px; padding: 0 20px;
   }
   .logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
   .logo .dot { width: 8px; height: 8px; background: var(--green); border: 1.5px solid var(--border); display: inline-block; }
-  .navlinks { display: flex; gap: 4px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; }
-  .navlinks a { padding: 6px 12px; border: 2px solid transparent; text-decoration: none; text-transform: uppercase; }
-  .navlinks a.active { border-color: var(--border); }
-  .navlinks a:hover:not(.active) { background: var(--secondary); }
   h1 { font-size: 1.7rem; margin: 18px 0 6px; letter-spacing: -0.02em; font-weight: 800; }
   .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 22px; line-height: 1.6; }
   .meta code { background: var(--secondary); border: 1px solid var(--border-light); padding: 1px 5px; }
@@ -66,13 +62,12 @@ CSS = """
 """
 
 def topbar(active: str) -> str:
-    def cls(name):
-        return "active" if name == active else ""
-    return f"""<div class="topbar">
+    """catalog.html is the public-facing page - scoped to match skillhub.club's
+    actual functionality (pure catalog browsing, no nav item exposes internal
+    workflow/review-pipeline pages, per 2026-07-02 direction). audit.html is a
+    separate internal/operator tool, not part of this branded public nav - it
+    gets a plain back-link instead, see its own header below."""
+    return """<div class="topbar">
   <div class="logo"><span class="dot"></span>SKILL-HUB</div>
-  <div class="navlinks">
-    <a href="catalog.html" class="{cls('catalog')}">Catalog</a>
-    <a href="audit.html" class="{cls('audit')}">Review Pipeline</a>
-  </div>
 </div>
 """

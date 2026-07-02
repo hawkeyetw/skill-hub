@@ -27,15 +27,11 @@
   .topbar {
     position: sticky; top: 0; z-index: 10; background: var(--bg);
     border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center;
     height: 52px; margin: 0 -20px 28px; padding: 0 20px;
   }
   .logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
   .logo .dot { width: 8px; height: 8px; background: var(--green); border: 1.5px solid var(--border); display: inline-block; }
-  .navlinks { display: flex; gap: 4px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; }
-  .navlinks a { padding: 6px 12px; border: 2px solid transparent; text-decoration: none; text-transform: uppercase; }
-  .navlinks a.active { border-color: var(--border); }
-  .navlinks a:hover:not(.active) { background: var(--secondary); }
   h1 { font-size: 1.7rem; margin: 18px 0 6px; letter-spacing: -0.02em; font-weight: 800; }
   .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 22px; line-height: 1.6; }
   .meta code { background: var(--secondary); border: 1px solid var(--border-light); padding: 1px 5px; }
@@ -67,19 +63,16 @@
   .finding.neutral { border-color: #ddd6c8; color: var(--muted); }
   .stage { margin-top: 10px; }
   .stage-label { font-weight: 700; color: var(--ink); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .internal-header { padding: 14px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .internal-header a { font-size: 0.78rem; font-weight: 700; text-decoration: none; color: var(--muted); }
+  .internal-header a:hover { color: var(--ink); }
+  .internal-tag { display: inline-block; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); border: 1px solid var(--border-light); padding: 2px 8px; margin-left: 10px; }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="logo"><span class="dot"></span>SKILL-HUB</div>
-  <div class="navlinks">
-    <a href="catalog.html" class="">Catalog</a>
-    <a href="audit.html" class="active">Review Pipeline</a>
-  </div>
-</div>
-
+<div class="internal-header"><a href="catalog.html">&larr; Catalog</a><span class="internal-tag">内部工具 · 不对外</span></div>
 <h1>REVIEW PIPELINE</h1>
-<p class="meta">每一次 <code>review_pipeline.py</code> 运行的完整记录 — 静态扫描结果、是否需要沙箱、最终结论，全部持久化在 <code>registry/audit-log.jsonl</code>，不用翻 git log。</p>
+<p class="meta">每一次 <code>review_pipeline.py</code> 运行的完整记录 — 静态扫描结果、是否需要沙箱、最终结论，全部持久化在 <code>registry/audit-log.jsonl</code>，不用翻 git log。这是运营者自己看的治理视图，不是给普通用户的浏览页面。</p>
 <div class="run">
   <div class="run-head">
     <span class="name">weather-cli-helper</span>

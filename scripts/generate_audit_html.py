@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _style import CSS, topbar  # noqa: E402
+from _style import CSS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 LOG = ROOT / "registry" / "audit-log.jsonl"
@@ -48,12 +48,16 @@ PAGE_HEAD = """<!DOCTYPE html>
   .finding.neutral {{ border-color: #ddd6c8; color: var(--muted); }}
   .stage {{ margin-top: 10px; }}
   .stage-label {{ font-weight: 700; color: var(--ink); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }}
+  .internal-header {{ padding: 14px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }}
+  .internal-header a {{ font-size: 0.78rem; font-weight: 700; text-decoration: none; color: var(--muted); }}
+  .internal-header a:hover {{ color: var(--ink); }}
+  .internal-tag {{ display: inline-block; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); border: 1px solid var(--border-light); padding: 2px 8px; margin-left: 10px; }}
 </style>
 </head>
 <body>
-{topbar}
+<div class="internal-header"><a href="catalog.html">&larr; Catalog</a><span class="internal-tag">内部工具 · 不对外</span></div>
 <h1>REVIEW PIPELINE</h1>
-<p class="meta">每一次 <code>review_pipeline.py</code> 运行的完整记录 — 静态扫描结果、是否需要沙箱、最终结论，全部持久化在 <code>registry/audit-log.jsonl</code>，不用翻 git log。</p>
+<p class="meta">每一次 <code>review_pipeline.py</code> 运行的完整记录 — 静态扫描结果、是否需要沙箱、最终结论，全部持久化在 <code>registry/audit-log.jsonl</code>，不用翻 git log。这是运营者自己看的治理视图，不是给普通用户的浏览页面。</p>
 """
 
 PAGE_TAIL = "</body>\n</html>\n"
@@ -128,7 +132,7 @@ def main():
     else:
         body = "\n".join(render_run(r) for r in records)
 
-    OUT.write_text(PAGE_HEAD.format(css=CSS, topbar=topbar("audit")) + body + PAGE_TAIL)
+    OUT.write_text(PAGE_HEAD.format(css=CSS) + body + PAGE_TAIL)
     print(f"wrote {OUT} ({len(records)} runs)")
 
 
