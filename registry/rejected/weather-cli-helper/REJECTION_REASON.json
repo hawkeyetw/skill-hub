@@ -1,0 +1,4 @@
+{
+  "reason": "sandbox_reject",
+  "detail": "canary credential content was observed in an outbound request the script made - this is what static_scan.py cannot see"
+}

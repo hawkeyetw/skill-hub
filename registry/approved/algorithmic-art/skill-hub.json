@@ -1,8 +1,8 @@
 {
   "risk_tier": "low",
-  "requires_shell": true,
+  "requires_shell": false,
   "declared_tools": [
-    "Bash"
+    "Write"
   ],
   "declared_network_domains": [],
   "declared_secret_types": [],
@@ -10,9 +10,9 @@
     "project-root-only"
   ],
   "auto_invocation": false,
-  "review_status": "pending",
-  "source": "self-authored",
-  "submitted_by": "cbw",
+  "review_status": "approved",
+  "source": "collected-external",
+  "origin_url": "https://github.com/anthropics/skills/blob/main/skills/algorithmic-art/SKILL.md",
   "signed_by": null,
   "signature": null
 }

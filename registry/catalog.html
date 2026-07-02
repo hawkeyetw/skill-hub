@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>skill-hub</title>
+<style>
+  :root { --border: #e3e3e3; --bg-soft: #f7f7f8; --accent: #111; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 920px; margin: 0 auto; padding: 32px 20px 80px; color: #1a1a1a; background: #fff; }
+  nav { display: flex; gap: 18px; margin-bottom: 28px; font-size: 0.9rem; }
+  nav a { color: #555; text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; }
+  nav a.active { color: #111; border-color: #111; font-weight: 600; }
+  h1 { font-size: 1.6rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .meta { color: #666; font-size: 0.85rem; margin-bottom: 20px; }
+  #search { width: 100%; padding: 10px 14px; font-size: 0.95rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 22px; }
+  #search:focus { outline: none; border-color: #999; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .card { border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; transition: box-shadow .15s ease; }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .card h2 { margin: 0 0 8px 0; font-size: 1.15rem; display: flex; align-items: center; gap: 10px; }
+  .badge { display: inline-block; font-size: 0.7rem; padding: 3px 9px; border-radius: 10px; color: white; font-weight: 500; }
+  .desc { color: #333; margin: 10px 0 14px; line-height: 1.5; font-size: 0.92rem; }
+  .install-label { font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .install { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: ui-monospace, "SF Mono", monospace; font-size: 0.8rem; overflow-x: auto; white-space: pre; line-height: 1.6; }
+  .empty { color: #999; font-style: italic; text-align: center; padding: 40px 0; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="catalog.html" class="active">Catalog（可安装的 skill）</a>
+  <a href="audit.html">Review Pipeline（审查记录）</a>
+</nav>
+<h1>skill-hub</h1>
+<p class="meta">内网 skill 目录 — 只展示 <code>approved</code> 状态的 skill；安装口令随点随拿，不需要登录。发布/上传走 <code>review_pipeline.py</code>，不走网页——这里是浏览+下载专用页。</p>
+<input id="search" type="text" placeholder="搜索 skill 名称或描述…" oninput="filterCards(this.value)">
+<div class="grid" id="grid">
+<div class="card" data-search="algorithmic-art creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. create original algorithmic art rather than copying existing artists&#x27; work to avoid copyright violations.">
+  <h2>algorithmic-art
+    <span class="badge" style="background:#2e7d32">风险: low</span>
+    <span class="badge" style="background:#455a64">外部采集</span>
+  </h2>
+  <p class="desc">Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists&#x27; work to avoid copyright violations.</p>
+  <div class="install-label">OpenCode / 任何读 agentskills.io 目录的工具</div>
+  <div class="install">bash scripts/install.sh algorithmic-art ~/.config/opencode/skills</div>
+  <div class="install-label" style="margin-top:10px">Claude Code</div>
+  <div class="install">/plugin marketplace add https://skill-hub.internal/.claude-plugin/marketplace.json
+/plugin install algorithmic-art@skill-hub</div>
+</div>
+
+<div class="card" data-search="commit-message-helper write conventional-commit style git commit messages. use when the user asks for help writing or improving a commit message.">
+  <h2>commit-message-helper
+    <span class="badge" style="background:#2e7d32">风险: low</span>
+    <span class="badge" style="background:#455a64">自己编写</span>
+  </h2>
+  <p class="desc">Write conventional-commit style git commit messages. Use when the user asks for help writing or improving a commit message.</p>
+  <div class="install-label">OpenCode / 任何读 agentskills.io 目录的工具</div>
+  <div class="install">bash scripts/install.sh commit-message-helper ~/.config/opencode/skills</div>
+  <div class="install-label" style="margin-top:10px">Claude Code</div>
+  <div class="install">/plugin marketplace add https://skill-hub.internal/.claude-plugin/marketplace.json
+/plugin install commit-message-helper@skill-hub</div>
+</div>
+
+</div>
+<script>
+function filterCards(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.card').forEach(c => {
+    c.style.display = c.dataset.search.includes(q) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
